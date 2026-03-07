@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+    <title>Bloom Magic 2026 🌸</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <canvas id="bg-canvas"></canvas>
+
+    <div id="wallpaper-render">
+        <div id="wp-title" style="font-size: 90px; font-weight: 900; margin-bottom: 50px;"></div>
+        <div id="wp-emoji" style="font-size: 350px; margin: 80px 0;">🌸</div>
+        <div id="wp-text" style="font-size: 50px; line-height: 1.5; max-width: 900px; opacity: 0.9;"></div>
+        <div style="position:absolute; bottom:100px; font-size: 35px; opacity: 0.6; letter-spacing: 10px;">SPRING 2026</div>
+    </div>
+
+    <div class="container">
+        <div id="screen-0" class="screen active">
+            <div class="lang-picker">
+                <div class="lang-btn selected" onclick="setLang('ru', this)">RU</div>
+                <div class="lang-btn" onclick="setLang('kz', this)">KZ</div>
+                <div class="lang-btn" onclick="setLang('kr', this)">KR</div>
+                <div class="lang-btn" onclick="setLang('uk', this)">UK</div>
+                <div class="lang-btn" onclick="setLang('en', this)">EN</div>
+                <div class="lang-btn" onclick="setLang('id', this)">ID</div>
+                <div class="lang-btn" onclick="setLang('jp', this)">JP</div>
+            </div>
+            <h1 id="welcome-text">Весна начинается с тебя...</h1>
+            <button onclick="showScreen(1)" id="start-btn">Начать ✨</button>
+        </div>
+
+        <div id="screen-1" class="screen">
+            <h1 id="choice-title">Выбери свой цветок 💐</h1>
+            <div class="flower-choice">
+                <div class="flower-card" onclick="nextStep('🌷')"><span>🌷</span></div>
+                <div class="flower-card" onclick="nextStep('🌹')"><span>🌹</span></div>
+                <div class="flower-card" onclick="nextStep('🌸')"><span>🌸</span></div>
+            </div>
+        </div>
+
+        <div id="screen-2" class="screen">
+            <input type="text" id="nameInput" placeholder="Твое имя...">
+            <button onclick="finalMagic()" id="gift-btn">Открыть подарок</button>
+        </div>
+
+
+        <div id="name-heart-container" style="height: 150px; position: relative; margin-bottom: 20px;">
+    </div>
+
+        <div id="screen-3" class="screen">
+    <div id="final-card-frame">
+        <div class="card-content">
+            <h1 id="f-personalized-name"></h1> 
+            
+            <div class="divider"></div> <h2 id="f-title" style="margin: 0; font-size: 1.5rem;"></h2>
+            <p id="f-msg"></p>
+        </div>
+    </div>
+
+    <div style="width: 100%; margin-top: 25px; position: relative; z-index: 10;">
+        <button id="letter-btn" onclick="openLetter()" style="background:rgba(255,255,255,0.15); color:white; border:1px solid white; display:none;">✉️ Личное письмо</button>
+        <button onclick="generateWallpaper()" style="background:#ffd700; color:#000;">📱 Скачать мои обои</button>
+        <button onclick="window.open('https://www.instagram.com/prost_aldi?igsh=cHY3ZXJrdmQ0dDky')" style="background:white; color:#ff007f;">💖 Instagram</button>
+    </div>
+</div>
+
+    <div id="catalog-overlay" class="overlay">
+        <span onclick="closeOverlay('catalog-overlay')" style="position:fixed; top:20px; right:30px; font-size: 30px; cursor:pointer;">✕</span>
+        <h2 style="margin-top: 50px;">Выбери дизайн обоев</h2>
+        <div class="catalog-grid">
+            <div>
+                <button onclick="generateWallpaper('🌷')">Скачать с Тюльпаном 🌷</button>
+            </div>
+            <div>
+                <button onclick="generateWallpaper('🌹')">Скачать с Розой 🌹</button>
+            </div>
+            <div>
+                <button onclick="generateWallpaper('🌸')">Скачать с Сакурой 🌸</button>
+            </div>
+        </div>
+        <p style="font-size: 0.8rem; margin-top: 20px; opacity: 0.7;">Картинка сохранится в Галерею</p>
+    </div>
+
+    <div id="letter-overlay" class="overlay">
+        <div style="background:#fffdf5; color:#333; padding: 40px 25px; width: 85%; border-radius: 20px; position: relative;">
+            <span onclick="closeOverlay('letter-overlay')" style="position:absolute; top:15px; right:20px; cursor:pointer; color: #999;">✕</span>
+            <div id="letter-text" style="font-family: Georgia, serif; line-height: 1.7; white-space: pre-wrap;"></div>
+        </div>
+    </div>
+
+    <script src="./script.js"></script>
+</body>
+</html>
