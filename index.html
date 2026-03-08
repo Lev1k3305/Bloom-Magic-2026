@@ -6,311 +6,268 @@
     <title>Bloom Magic 2026 🌸</title>
     
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
-        :root { --pink: #ff007f; --gold: #ffd700; --violet: #4a00e0; }
+        :root { --pink: #ff007f; --gold: #ffd700; --violet: #7000ff; --dark: #0f001a; }
         
-        body { 
+        body, html { 
             margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; 
-            background: #1a0033; color: white; overflow: hidden; height: 100vh;
+            background: var(--dark); color: white; overflow: hidden; height: 100vh;
         }
 
-        #bg-canvas { position: fixed; top: 0; left: 0; z-index: -1; width: 100%; height: 100%; }
+        /* Живой фон */
+        #bg-canvas { position: fixed; top: 0; left: 0; z-index: -1; width: 100%; height: 100%; background: radial-gradient(circle at center, #1a0033 0%, #0f001a 100%); }
 
-        /* Контейнер приложения */
         .container {
             display: flex; flex-direction: column; align-items: center; 
             justify-content: center; height: 100vh; padding: 20px; box-sizing: border-box;
         }
 
-        .screen { display: none; flex-direction: column; align-items: center; width: 100%; animation: fadeIn 0.5s ease; }
+        /* Плавные анимации экранов */
+        .screen { 
+            display: none; flex-direction: column; align-items: center; width: 100%; 
+            text-align: center; animation: slideUp 0.6s cubic-bezier(0.23, 1, 0.32, 1); 
+        }
         .active { display: flex; }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px) scale(0.9); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
 
-        /* Выбор языка */
-        .lang-picker { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 30px; }
+        /* Кнопки языков */
+        .lang-picker { display: flex; gap: 10px; margin-bottom: 40px; }
         .lang-btn { 
-            padding: 8px 12px; border: 1px solid rgba(255,255,255,0.3); border-radius: 10px; 
-            cursor: pointer; font-size: 0.8rem; transition: 0.3s;
+            padding: 10px 20px; border: 2px solid rgba(255,255,255,0.2); border-radius: 15px; 
+            cursor: pointer; background: rgba(255,255,255,0.05); transition: 0.4s; font-weight: bold;
         }
-        .lang-btn.selected { background: var(--pink); border-color: var(--pink); }
+        .lang-btn.selected { background: var(--pink); border-color: var(--pink); box-shadow: 0 0 20px var(--pink); transform: translateY(-3px); }
 
-        /* Карточки цветов */
-        .flower-choice { display: flex; gap: 15px; margin-top: 30px; }
-        .flower-card { 
-            font-size: 3rem; background: rgba(255,255,255,0.1); padding: 20px; 
-            border-radius: 20px; cursor: pointer; transition: 0.3s; 
-        }
-        .flower-card:hover { transform: scale(1.1); background: rgba(255,255,255,0.2); }
-
-        /* Ввод имени */
+        /* Красивый инпут */
         input {
-            width: 80%; max-width: 300px; padding: 15px; border-radius: 25px;
-            border: 1px solid white; background: rgba(255,255,255,0.1); color: white;
-            text-align: center; font-size: 1.2rem; margin-bottom: 20px; outline: none;
+            width: 85%; max-width: 320px; padding: 20px; border-radius: 35px;
+            border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.05); color: white;
+            text-align: center; font-size: 1.3rem; margin-bottom: 25px; outline: none; transition: 0.3s;
         }
+        input:focus { border-color: var(--pink); box-shadow: 0 0 15px rgba(255, 0, 127, 0.4); background: rgba(255,255,255,0.1); }
 
-        /* Кнопки */
-        button {
-            width: 80%; max-width: 300px; padding: 15px; border-radius: 50px;
-            border: none; font-weight: bold; font-size: 1rem; cursor: pointer; margin: 10px 0;
+        /* Пульсирующие кнопки */
+        .main-btn {
+            width: 85%; max-width: 320px; padding: 20px; border-radius: 50px;
+            border: none; font-weight: 800; font-size: 1.1rem; cursor: pointer; 
+            text-transform: uppercase; letter-spacing: 1.5px; transition: 0.4s;
+            background: linear-gradient(45deg, var(--pink), var(--violet)); color: white;
+            box-shadow: 0 5px 20px rgba(112, 0, 255, 0.4);
         }
+        .main-btn:active { transform: scale(0.95); }
+        .main-btn:hover { box-shadow: 0 8px 25px rgba(255, 0, 127, 0.6); transform: translateY(-2px); }
 
-        /* Оверлеи */
-        .overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 100; flex-direction: column; align-items: center; justify-content: center;
+        /* Цветы */
+        .flower-card { 
+            font-size: 4rem; cursor: pointer; transition: 0.5s; 
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.2));
         }
+        .flower-card:hover { transform: rotate(15deg) scale(1.2); filter: drop-shadow(0 0 20px var(--pink)); }
 
-        /* Финальная рамка */
+        /* Карточка результата */
         #final-card-frame {
-            width: 100%; max-width: 340px; background: rgba(255,255,255,0.1);
-            border: 2px solid rgba(255,255,255,0.3); border-radius: 30px;
-            padding: 30px 15px; box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            width: 100%; max-width: 360px; background: rgba(255,255,255,0.07);
+            backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 40px; padding: 40px 20px; position: relative;
         }
-        #f-personalized-name { font-family: 'Caveat', cursive; font-size: 3.5rem; margin: 0; }
-        .divider { width: 50%; height: 1px; background: white; opacity: 0.3; margin: 15px auto; }
+        #f-personalized-name { font-family: 'Caveat', cursive; font-size: 4rem; margin: 0; color: var(--gold); text-shadow: 0 0 15px rgba(255, 215, 0, 0.5); }
 
-        /* Скрытая область для рендера обоев */
-        #wallpaper-render {
-            position: fixed; left: -9999px; top: 0; width: 1080px; height: 1920px;
-            background: linear-gradient(135deg, #1a0033 0%, #4a00e0 100%);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            text-align: center; color: white;
-        }
+        /* Стирашка */
+        .scratch-box { position: relative; width: 280px; height: 160px; margin: 20px auto; border-radius: 20px; overflow: hidden; border: 2px solid var(--gold); }
+        #scratch-canvas { position: absolute; top: 0; left: 0; z-index: 2; touch-action: none; }
+        .letter-content { background: white; color: #222; height: 100%; display: flex; align-items: center; justify-content: center; padding: 20px; font-weight: 500; line-height: 1.4; }
+
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 1000; flex-direction: column; align-items: center; justify-content: center; }
     </style>
 </head>
 <body>
 
     <canvas id="bg-canvas"></canvas>
 
-    <div id="wallpaper-render">
-        <div id="wp-title" style="font-size: 100px; font-family: 'Caveat';">Имя</div>
-        <div id="wp-emoji" style="font-size: 300px;">🌸</div>
-        <div id="wp-text" style="font-size: 50px; max-width: 800px; font-weight: 300;"></div>
-        <div style="position:absolute; bottom:100px; font-size: 30px; opacity: 0.5; letter-spacing: 8px;">SPRING 2026</div>
-    </div>
-
     <div class="container">
         <div id="screen-0" class="screen active">
             <div class="lang-picker">
-                <div class="lang-btn selected" onclick="setLang('ru', this)">RU</div>
-                <div class="lang-btn" onclick="setLang('jp', this)">JP</div>
-                <div class="lang-btn" onclick="setLang('en', this)">EN</div>
-                <div class="lang-btn" onclick="setLang('kz', this)">KZ</div>
+                <div class="lang-btn selected" onclick="updateLang('ru', this)">RU</div>
+                <div class="lang-btn" onclick="updateLang('kz', this)">KZ</div>
+                <div class="lang-btn" onclick="updateLang('en', this)">EN</div>
+                <div class="lang-btn" onclick="updateLang('jp', this)">JP</div>
             </div>
-            <h1 id="welcome-text">Весна начинается с тебя...</h1>
-            <button onclick="showScreen(1)" id="start-btn" style="background: var(--pink); color: white;">Начать ✨</button>
+            <h1 id="txt-welcome" style="font-size: 1.8rem; margin-bottom: 30px;">Весна начинается с тебя...</h1>
+            <button class="main-btn" onclick="showScreen(1)" id="btn-start">Начать ✨</button>
         </div>
 
         <div id="screen-1" class="screen">
-            <h1 id="choice-title">Выбери свой цветок 💐</h1>
-            <div class="flower-choice">
-                <div class="flower-card" onclick="nextStep('🌷')"><span>🌷</span></div>
-                <div class="flower-card" onclick="nextStep('🌹')"><span>🌹</span></div>
-                <div class="flower-card" onclick="nextStep('🌸')"><span>🌸</span></div>
+            <h1 id="txt-choice" style="margin-bottom: 40px;">Выбери свой цветок 💐</h1>
+            <div style="display: flex; gap: 30px;">
+                <div class="flower-card" onclick="pickFlower('🌷')">🌷</div>
+                <div class="flower-card" onclick="pickFlower('🌹')">🌹</div>
+                <div class="flower-card" onclick="pickFlower('🌸')">🌸</div>
             </div>
         </div>
 
         <div id="screen-2" class="screen">
             <input type="text" id="nameInput" placeholder="Твое имя...">
-            <button onclick="finalMagic()" id="gift-btn" style="background: var(--pink); color: white;">Открыть подарок</button>
+            <button class="main-btn" onclick="runMagic()" id="btn-open">Открыть подарок</button>
         </div>
 
         <div id="screen-3" class="screen">
             <div id="final-card-frame">
-                <div class="card-content">
-                    <h1 id="f-personalized-name"></h1> 
-                    <div class="divider"></div> 
-                    <h2 id="f-title" style="margin: 0;">ДЛЯ ТЕБЯ</h2>
-                    <p id="f-msg"></p>
-                </div>
+                <h1 id="f-personalized-name"></h1> 
+                <p id="f-title" style="letter-spacing: 3px; font-weight: bold; opacity: 0.7; margin-top: 10px;"></p>
+                <div style="width: 50px; height: 3px; background: var(--pink); margin: 20px auto;"></div>
+                <p id="f-msg" style="font-size: 1.2rem; min-height: 50px;"></p>
             </div>
-            <div style="width: 100%; margin-top: 25px; display: flex; flex-direction: column; align-items: center;">
-                <button id="letter-btn" onclick="openLetter()" style="background:rgba(255,255,255,0.15); color:white; border:1px solid white;">✉️ Личное письмо</button>
-                <button onclick="generateWallpaper()" style="background:var(--gold); color:#000;">📱 Скачать мои обои</button>
-                <button onclick="window.open('https://www.instagram.com/prost_aldi?igsh=cHY3ZXJrdmQ0dDk')" style="background:white; color:var(--pink);">💖 Instagram</button>
-            </div>
+            
+            <button id="btn-letter" onclick="openLetter()" style="display:none; margin-top: 30px; background: none; border: 2px solid white; color: white;" class="main-btn">✉️ Личное письмо</button>
+            <button id="btn-video" onclick="openVideo()" style="margin-top: 15px; background: var(--gold); color: black;" class="main-btn">🎬 Смотреть видео</button>
         </div>
-        <p style="font-size: 0.8rem; margin-top: 20px; opacity: 0.7;">Картинка сохранится в Галерею</p>
     </div>
 
-    <div id="letter-overlay" class="overlay" onclick="closeOverlay('letter-overlay')">
-        <div style="background:#fffdf5; color:#333; padding: 40px 25px; width: 85%; max-width: 400px; border-radius: 20px; position: relative;" onclick="event.stopPropagation()">
-            <span onclick="closeOverlay('letter-overlay')" style="position:absolute; top:15px; right:20px; cursor:pointer; color: #999; font-size: 1.5rem;">✕</span>
-            <div id="letter-text" style="font-family: 'Montserrat', sans-serif; line-height: 1.7; white-space: pre-wrap;"></div>
+    <div id="overlay-letter" class="overlay">
+        <h2 id="txt-scratch" style="color: var(--gold);">Сотри слой пальцем 👆</h2>
+        <div class="scratch-box">
+            <div id="letter-text" class="letter-content"></div>
+            <canvas id="scratch-canvas" width="280" height="160"></canvas>
         </div>
+        <button onclick="closeOverlay('overlay-letter')" class="main-btn" style="width: 150px; background: white; color: black;" id="btn-close-l">Закрыть</button>
+    </div>
+
+    <div id="overlay-video" class="overlay">
+        <video id="v-player" controls playsinline>
+            <source src="./video.mp4" type="video/mp4">
+        </video>
+        <button onclick="closeVideo()" class="main-btn" style="width: 150px; background: white; color: black; margin-top: 20px;" id="btn-close-v">Закрыть</button>
     </div>
 
     <script>
-        const VIP = {
-            "Мама": { card: "Мамочка, ты — моё всё! ❤️", letter: "Дорогая мама, с праздником! Ты научила меня видеть красоту в мире..." },
-            "Алена": { card: "Алена, твои глаза сияют как звезды! ✨", letter: "Дорогая Алена, с 8 Марта! Пусть эта весна принесет много радости,не с терпением жду нашей вследующей встрече:)" },
-            "Руфина": { card: "Руфина, ты — воплощение красоты! 🌸", letter: "Дорогая Руфина, с праздником! Ты словно весенний цветок..." },
-            "Диля:)": {card: "Диля, ты — как весенний ветер, который приносит свежесть и радость. С твоим днем! ✨",letter: "Диля, спасибо тебе за твою энергию и позитив. В этом году я решил написать этот код специально для тебя. Пусть эта весна будет особенной!",},
-            "Дильназ": {card: "Дильназ, ты — как весенний рассвет, который озаряет все вокруг. С твоим днем! 🌹",letter: "Дильназ, спасибо тебе за твою красоту и вдохновение. В этом году я решил написать этот код специально для тебя. Пусть эта весна будет особенной!",},
-            "Зайка": { card: "Зайка, ты — как весенний сад, полный цветов и радости. С твоим днем! 🌸",letter: "Зайка, спасибо тебе за твою доброту и улыбку. В этом году я решил написать этот код специально для тебя. Пусть эта весна будет особенной!",},
-            "Шугыла": {card: "Шугыла, ты — как весенний ветер, который приносит перемены и вдохновение. С твоим днем! 🌺",letter: "Шугыла, спасибо тебе за твою энергию и позитив. В этом году я решил написать этот код специально для тебя. Пусть эта весна будет особенной!",},
-            "Зоя": {card: "Зоя, ты — как весенний цветок, который расцветает и радует всех вокруг. С твоим днем! 🌷",letter: "Зоя, спасибо тебе за твою красоту и вдохновение. В этом году я решил написать этот код специально для тебя. Пусть эта весна будет особенной, с жду лета чтобы с тобой сыграть волейбол;)",},
-            "Лина": {card: "Лина, ты — как весенний луч солнца, который согревает и вдохновляет. С твоим днем! 🌞",letter: "Лина, спасибо тебе за твою энергию и позитив. В этом году я решил написать этот код специально для тебя. Пусть эта весна будет особенной!",},
-            "Лейла": {card: "Лейла, ты — как весенний дождь, который приносит свежесть и жизнь всему вокруг. С твоим днем! 🌧️",letter: "Лейла, спасибо тебе за твою красоту и вдохновение. В этом году я решил написать этот код специально для тебя. Пусть эта весна будет особенной!",},
-            "Ангелина": {card: "Ангелина, ты — как весенний ангел, который приносит свет и радость в этот мир. С твоим днем! 👼",letter: "Ангелина, спасибо тебе за твою доброту и улыбку. В этом году я решил написать этот код специально для тебя. Пусть эта весна будет особенной!",},
-            "Венера": {card: "Венера, ты — как весенний цветок, который расцветает и радует всех вокруг. С твоим днем! 🌹",letter: "Венера, спасибо тебе за твою красоту и вдохновение. В этом году я решил написать этот код специально для тебя. Пусть эта весна будет особенной!",},
-            "Анель": {card: "Анель, ты — как весенний бриз, который приносит свежесть и радость. С твоим днем! 🌬️",letter: "Анель, спасибо тебе за твою энергию и позитив. В этом году я решил написать этот код специально для тебя.Неожиданно наверное, но надеюсь тебе понравится,сделал потомучто нравится моя работа,надеюсь оценишь. Пусть эта весна будет особенной!",},
-            "Румия": {card: "Румия, ты — как весенний цветок, который расцветает и радует всех вокруг. С твоим днем! 🌸",letter: "Румия, спасибо тебе за твою красоту и вдохновение. В этом году я решил написать этот код специально для вас,пусть и часто вам и не пишу но думаю вам это понравилось,это частичка моей души,ведь мне нравится моя работа. Пусть эта весна будет особенной!",},
-            "Аида": {card: "Аида, ты — как весенний луч солнца, который согревает и вдохновляет. С твоим днем! 🌞",letter: "Аида, спасибо тебе за твою энергию и позитив. В этом году я решил написать этот код специально для тебя. Пусть эта весна будет особенной!",}
+        // === КОНФИГ ===
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw866-KPedBNu0W9HO-voeVp5e__hwg79o-MjSxK6vzW6bOKJ-0X9FYspAOt5Cgu1M/exec'; 
+
+        const VIP_DATA = {
+            "Аяулым": { card: "С 8 марта, красотка! 🌸", letter: "Аяу, ты просто космос! Не знаю, кто тебе там писал эти пожелания, но они все фигня по сравнению с тем, что я тебе сейчас скажу: Ты невероятная, умная и красивая. Пусть эта весна принесет тебе море счастья и любви!" },
+            "Еркежан": { card: "С 8 марта, красавица! 🌷", letter: "Еркежан, ты как весенний цветок — нежная и прекрасная! Пусть эта весна принесет тебе море счастья и радости. Ты заслуживаешь только лучшего!" },
+            "Тимур": { card: "С 8 марта, очаровательная! 🌹", letter: "Тимур, ты как весенний бриз — свежая и вдохновляющая! Пусть эта весна принесет тебе море улыбок и радости. Ты заслуживаешь только счастья!" },
+        }
+
+        const LANGS = {
+            'ru': { welcome: "Весна начинается с тебя...", choice: "Выбери свой цветок 💐", start: "Начать ✨", open: "Открыть подарок", foryou: "ДЛЯ ТЕБЯ", video: "🎬 Смотреть видео", letter: "✉️ Личное письмо", scratch: "Сотри слой пальцем 👆", close: "Закрыть", placeholder: "Твое имя...", gen: "Создаем магию...", wishes: ["Пусть сбываются все мечты! 🌸", "Ты прекрасна, как эта весна! 🌷", "Сияй ярче всех звезд! ✨"] },
+            'kz': { welcome: "Көктем сенен басталады...", choice: "Гүліңді таңда 💐", start: "Бастау ✨", open: "Сыйлықты ашу", foryou: "СЕН ҮШІН", video: "🎬 Видеоны көру", letter: "✉️ Жеке хат", scratch: "Алтын қабатты өшір 👆", close: "Жабу", placeholder: "Есімің кім?", gen: "Сиқыр дайындалуда...", wishes: ["Армандарың орындалсын! 🌸", "Көктемдей құлпыра бер! 🌷", "Жұлдыздай жарқыра! ✨"] },
+            'en': { welcome: "Spring starts with you...", choice: "Pick your flower 💐", start: "Start ✨", open: "Open Gift", foryou: "FOR YOU", video: "🎬 Watch Video", letter: "✉️ Private Letter", scratch: "Scratch the layer 👆", close: "Close", placeholder: "Your name...", gen: "Creating magic...", wishes: ["May your dreams come true! 🌸", "You are as beautiful as spring! 🌷", "Shine brighter than the stars! ✨"] },
+            'jp': { welcome: "春は君から始まる...", choice: "花を選んでね 💐", start: "開始 ✨", open: "ギフトを開く", foryou: "あなたへ", video: "🎬 ビデオを見る", letter: "✉️ 私信", scratch: "こすってみて 👆", close: "閉じる", placeholder: "お名前は...", gen: "魔法を作成中...", wishes: ["夢が叶いますように！ 🌸", "春のように美しいですね！ 🌷", "星より輝いて！ ✨"] }
         };
 
         let currentLang = 'ru';
-        let selectedFlower = '🌸';
-        let userName = '';
-        let currentLetter = '';
+        let flower = '🌸';
+        let letter = '';
 
-        const translations = {
-        'ru': {
-        welcome: "Весна начинается с тебя...",
-        start: "Начать ✨",
-        choice: "Выбери свой цветок 💐",
-        placeholder: "Твое имя...",
-        openGift: "Открыть подарок",
-        letter: "✉️ Личное письмо",
-        download: "📱 Скачать мои обои",
-        insta: "💖 Instagram"
-    },
-    'kz': {
-        welcome: "Көктем сенен басталады...",
-        start: "Бастау ✨",
-        choice: "Гүліңді таңда 💐",
-        placeholder: "Есіміңіз...",
-        openGift: "Сыйлықты ашу",
-        letter: "✉️ Жеке хат",
-        download: "📱 Тұсқағазды жүктеу",
-        insta: "💖 Instagram"
-    },
-    'en': {
-        welcome: "Spring starts with you...",
-        start: "Start ✨",
-        choice: "Choose your flower 💐",
-        placeholder: "Your name...",
-        openGift: "Open Gift",
-        letter: "✉️ Personal Letter",
-        download: "📱 Download Wallpaper",
-        insta: "💖 Instagram"
-    },
-    'jp': {
-        welcome: "春は君から始まる...",
-        start: "開始 ✨",
-        choice: "花を選んでください 💐",
-        placeholder: "お名前...",
-        openGift: "ギフトを開く",
-        letter: "✉️ 私信",
-        download: "📱 壁紙をダウンロード",
-        insta: "💖 Instagram"
-    }
-};
+        function updateLang(l, btn) {
+            currentLang = l;
+            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            const t = LANGS[l];
+            document.getElementById('txt-welcome').innerText = t.welcome;
+            document.getElementById('btn-start').innerText = t.start;
+            document.getElementById('txt-choice').innerText = t.choice;
+            document.getElementById('btn-open').innerText = t.open;
+            document.getElementById('nameInput').placeholder = t.placeholder;
+            document.getElementById('btn-video').innerText = t.video;
+            document.getElementById('btn-letter').innerText = t.letter;
+            document.getElementById('txt-scratch').innerText = t.scratch;
+            document.getElementById('btn-close-l').innerText = t.close;
+            document.getElementById('btn-close-v').innerText = t.close;
+        }
 
-function setLang(lang, btn) {
-    currentLang = lang;
-    
-    // Подсветка активной кнопки
-    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('selected'));
-    btn.classList.add('selected');
-
-    // Меняем тексты на экранах
-    const t = translations[lang];
-    document.getElementById('welcome-text').innerText = t.welcome;
-    document.getElementById('start-btn').innerText = t.start;
-    document.getElementById('choice-title').innerText = t.choice;
-    document.getElementById('nameInput').placeholder = t.placeholder;
-    document.getElementById('gift-btn').innerText = t.openGift;
-    document.getElementById('letter-btn').innerText = t.letter;
-    
-    // Кнопки на финальном экране (ищем по тексту, если нет ID)
-    const finalBtns = document.querySelectorAll('#screen-3 button');
-    if (finalBtns.length >= 3) {
-        finalBtns[1].innerText = t.download;
-        finalBtns[2].innerText = t.insta;
-    }
-}
-        function showScreen(id) {
+        function showScreen(n) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById('screen-' + id).classList.add('active');
+            document.getElementById('screen-'+n).classList.add('active');
         }
 
-        function nextStep(flower) {
-            selectedFlower = flower;
-            showScreen(2);
-        }
+        function pickFlower(f) { flower = f; showScreen(2); }
 
-        function openLetter() {
-            document.getElementById('letter-text').innerText = currentLetter;
-            document.getElementById('letter-overlay').style.display = 'flex';
-        }
-
-        function closeOverlay(id) { document.getElementById(id).style.display = 'none'; }
-
-        async function finalMagic() {
-            let input = document.getElementById('nameInput').value.trim();
-            if(!input) return;
-
-            // Нормализация имени: Алена
-            userName = input.charAt(0).toUpperCase() + input.slice(1).toLowerCase();
-            const data = VIP[userName];
-
+        async function runMagic() {
+            let name = document.getElementById('nameInput').value.trim();
+            if(!name) return;
+            name = name.charAt(0).toUpperCase() + name.slice(1);
+            
             showScreen(3);
             confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
 
-            document.getElementById('f-personalized-name').innerText = userName;
-            const msgEl = document.getElementById('f-msg');
-            const letterBtn = document.getElementById('letter-btn');
+            document.getElementById('f-personalized-name').innerText = name;
+            document.getElementById('f-title').innerText = LANGS[currentLang].foryou;
+            
+            const msg = document.getElementById('f-msg');
+            const data = VIP_DATA[name];
 
             if(data) {
-                currentLetter = data.letter;
-                letterBtn.style.display = 'block';
-                msgEl.innerText = data.card;
+                letter = data.letter;
+                document.getElementById('btn-letter').style.display = 'block';
+                msg.innerText = data.card;
             } else {
-                letterBtn.style.display = 'none';
-                msgEl.innerText = "Пусть эта весна принесет тебе много улыбок! ✨";
+                document.getElementById('btn-letter').style.display = 'none';
+                msg.innerText = LANGS[currentLang].gen;
+                await new Promise(r => setTimeout(r, 1000));
+                msg.innerText = LANGS[currentLang].wishes[Math.floor(Math.random()*3)];
+            }
+
+            // Лог в таблицу
+            if(SCRIPT_URL.length > 10) {
+                fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ name, flower, lang: currentLang, status: data ? "VIP" : "Guest" }) });
             }
         }
 
-        async function generateWallpaper() {
-            // Подготовка рендера
-            document.getElementById('wp-title').innerText = userName;
-            document.getElementById('wp-emoji').innerText = selectedFlower;
-            document.getElementById('wp-text').innerText = document.getElementById('f-msg').innerText;
+        function openLetter() {
+            document.getElementById('letter-text').innerText = letter;
+            document.getElementById('overlay-letter').style.display = 'flex';
+            const c = document.getElementById('scratch-canvas');
+            const ctx = c.getContext('2d');
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.fillStyle = '#ffd700';
+            ctx.fillRect(0,0,280,160);
             
-            const renderArea = document.getElementById('wallpaper-render');
-            const canvas = await html2canvas(renderArea, { scale: 1 });
-            
-            const link = document.createElement('a');
-            link.download = `Bloom_Wallpaper_${userName}.png`;
-            link.href = canvas.toDataURL();
-            link.click();
+            let draw = false;
+            const move = (e) => {
+                if(!draw) return;
+                const r = c.getBoundingClientRect();
+                const x = (e.clientX || e.touches[0].clientX) - r.left;
+                const y = (e.clientY || e.touches[0].clientY) - r.top;
+                ctx.globalCompositeOperation = 'destination-out';
+                ctx.beginPath(); ctx.arc(x,y,25,0,Math.PI*2); ctx.fill();
+            };
+            c.onmousedown = () => draw = true;
+            window.onmouseup = () => draw = false;
+            c.onmousemove = move;
+            c.ontouchstart = () => draw = true;
+            c.ontouchmove = move;
         }
 
-        // Фон - частицы
+        function openVideo() { document.getElementById('overlay-video').style.display='flex'; document.getElementById('v-player').play(); }
+        function closeVideo() { document.getElementById('v-player').pause(); document.getElementById('overlay-video').style.display='none'; }
+        function closeOverlay(id) { document.getElementById(id).style.display='none'; }
+
+        // Particles
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
-        let particles = [];
-        function initBG() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            for(let i=0; i<50; i++) particles.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, r: Math.random()*3, s: Math.random()*1 });
+        let pts = [];
+        function init() {
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+            for(let i=0; i<40; i++) pts.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, r: Math.random()*2+1, s: Math.random()*0.5+0.2 });
         }
-        function drawBG() {
+        function animate() {
             ctx.clearRect(0,0,canvas.width,canvas.height);
-            ctx.fillStyle = "rgba(255,255,255,0.2)";
-            particles.forEach(p => {
+            ctx.fillStyle = "rgba(255,255,255,0.3)";
+            pts.forEach(p => {
                 ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill();
-                p.y -= p.s; if(p.y < -10) p.y = canvas.height + 10;
+                p.y -= p.s; if(p.y < -10) p.y = canvas.height+10;
             });
-            requestAnimationFrame(drawBG);
+            requestAnimationFrame(animate);
         }
-        initBG(); drawBG();
+        init(); animate();
     </script>
 </body>
 </html>
