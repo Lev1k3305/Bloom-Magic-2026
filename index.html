@@ -16,7 +16,6 @@
             background: var(--dark); color: white; overflow: hidden; height: 100vh;
         }
 
-        /* Живой фон */
         #bg-canvas { position: fixed; top: 0; left: 0; z-index: -1; width: 100%; height: 100%; background: radial-gradient(circle at center, #1a0033 0%, #0f001a 100%); }
 
         .container {
@@ -24,7 +23,6 @@
             justify-content: center; height: 100vh; padding: 20px; box-sizing: border-box;
         }
 
-        /* Плавные анимации экранов */
         .screen { 
             display: none; flex-direction: column; align-items: center; width: 100%; 
             text-align: center; animation: slideUp 0.6s cubic-bezier(0.23, 1, 0.32, 1); 
@@ -36,7 +34,6 @@
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        /* Кнопки языков */
         .lang-picker { display: flex; gap: 10px; margin-bottom: 40px; }
         .lang-btn { 
             padding: 10px 20px; border: 2px solid rgba(255,255,255,0.2); border-radius: 15px; 
@@ -44,7 +41,6 @@
         }
         .lang-btn.selected { background: var(--pink); border-color: var(--pink); box-shadow: 0 0 20px var(--pink); transform: translateY(-3px); }
 
-        /* Красивый инпут */
         input {
             width: 85%; max-width: 320px; padding: 20px; border-radius: 35px;
             border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.05); color: white;
@@ -52,25 +48,20 @@
         }
         input:focus { border-color: var(--pink); box-shadow: 0 0 15px rgba(255, 0, 127, 0.4); background: rgba(255,255,255,0.1); }
 
-        /* Пульсирующие кнопки */
         .main-btn {
             width: 85%; max-width: 320px; padding: 20px; border-radius: 50px;
             border: none; font-weight: 800; font-size: 1.1rem; cursor: pointer; 
             text-transform: uppercase; letter-spacing: 1.5px; transition: 0.4s;
             background: linear-gradient(45deg, var(--pink), var(--violet)); color: white;
             box-shadow: 0 5px 20px rgba(112, 0, 255, 0.4);
+            margin-top: 10px;
         }
         .main-btn:active { transform: scale(0.95); }
         .main-btn:hover { box-shadow: 0 8px 25px rgba(255, 0, 127, 0.6); transform: translateY(-2px); }
 
-        /* Цветы */
-        .flower-card { 
-            font-size: 4rem; cursor: pointer; transition: 0.5s; 
-            filter: drop-shadow(0 0 10px rgba(255,255,255,0.2));
-        }
+        .flower-card { font-size: 4rem; cursor: pointer; transition: 0.5s; filter: drop-shadow(0 0 10px rgba(255,255,255,0.2)); }
         .flower-card:hover { transform: rotate(15deg) scale(1.2); filter: drop-shadow(0 0 20px var(--pink)); }
 
-        /* Карточка результата */
         #final-card-frame {
             width: 100%; max-width: 360px; background: rgba(255,255,255,0.07);
             backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.2);
@@ -78,7 +69,6 @@
         }
         #f-personalized-name { font-family: 'Caveat', cursive; font-size: 4rem; margin: 0; color: var(--gold); text-shadow: 0 0 15px rgba(255, 215, 0, 0.5); }
 
-        /* Стирашка */
         .scratch-box { position: relative; width: 280px; height: 160px; margin: 20px auto; border-radius: 20px; overflow: hidden; border: 2px solid var(--gold); }
         #scratch-canvas { position: absolute; top: 0; left: 0; z-index: 2; touch-action: none; }
         .letter-content { background: white; color: #222; height: 100%; display: flex; align-items: center; justify-content: center; padding: 20px; font-weight: 500; line-height: 1.4; }
@@ -124,10 +114,15 @@
                 <p id="f-msg" style="font-size: 1.2rem; min-height: 50px;"></p>
             </div>
             
-            <button id="btn-letter" onclick="openLetter()" style="display:none; margin-top: 30px; background: none; border: 2px solid white; color: white;" class="main-btn">✉️ Личное письмо</button>
-            <button id="btn-video" onclick="openVideo()" style="margin-top: 15px; background: var(--gold); color: black;" class="main-btn">🎬 Смотреть видео</button>
+            <button id="btn-letter" onclick="openLetter()" style="display:none; margin-top: 20px; background: none; border: 2px solid white; color: white;" class="main-btn">✉️ Личное письмо</button>
+            <button id="btn-video" onclick="openVideo()" style="background: var(--gold); color: black;" class="main-btn">🎬 Смотреть видео</button>
+            
+            <a href="https://www.instagram.com/prost_aldi?igsh=cHY3ZXJrdmQ0dDky" target="_blank" style="text-decoration: none; width: 100%; display: flex; justify-content: center;">
+                <button id="btn-insta" class="main-btn" style="background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: white; border: none;">
+                    📸 Instagram
+                </button>
+            </a>
         </div>
-
     </div>
 
     <div id="overlay-letter" class="overlay">
@@ -140,26 +135,19 @@
     </div>
 
     <div id="overlay-video" class="overlay">
-        <video id="v-player" controls playsinline>
+        <video id="v-player" controls playsinline style="width: 90%; max-width: 500px; border-radius: 15px;">
             <source src="./video.mp4" type="video/mp4">
         </video>
         <button onclick="closeVideo()" class="main-btn" style="width: 150px; background: white; color: black; margin-top: 20px;" id="btn-close-v">Закрыть</button>
-
-        <a href="https://www.instagram.com/prost_aldi?igsh=cHY3ZXJrdmQ0dDky" target="_blank" style="text-decoration: none; width: 85%; max-width: 320px;">
-    <button class="main-btn" style="margin-top: 15px; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: white; border: none;">
-        📸 Instagram
-    </button>
-</a>
     </div>
 
     <script>
-        // === КОНФИГ ===
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw866-KPedBNu0W9HO-voeVp5e__hwg79o-MjSxK6vzW6bOKJ-0X9FYspAOt5Cgu1M/exec'; 
 
         const VIP_DATA = {
             "Аяулым": { card: "С 8 марта, красотка! 🌸", letter: "Аяу, ты просто космос! Не знаю, кто тебе там писал эти пожелания, но они все фигня по сравнению с тем, что я тебе сейчас скажу: Ты невероятная, умная и красивая. Пусть эта весна принесет тебе море счастья и любви!" },
             "Еркежан": { card: "С 8 марта, красавица! 🌷", letter: "Еркежан, ты как весенний цветок — нежная и прекрасная! Пусть эта весна принесет тебе море счастья и радости. Ты заслуживаешь только лучшего!" },
-            "Тимур": { card: "С 8 марта, очаровательная! 🌹", letter: "Тимур, ты как весенний бриз — свежая и вдохновляющая! Пусть эта весна принесет тебе море улыбок и радости. Ты заслуживаешь только счастья!" },
+            "Тимур": { card: "С 8 марта, «очаровашка»! 😂", letter: "Тима, родной, с праздником! Какой 8 марта, иди на завод, суета не ждет! Ладно, шучу, ты лучший бро. Но за то, что зашел сюда под женским именем — с тебя шоколадка! 😂" },
         }
 
         const LANGS = {
@@ -188,6 +176,7 @@
             document.getElementById('txt-scratch').innerText = t.scratch;
             document.getElementById('btn-close-l').innerText = t.close;
             document.getElementById('btn-close-v').innerText = t.close;
+            document.getElementById('btn-insta').innerText = (l === 'ru' ? "📸 Instagram" : (l === 'kz' ? "📸 Инстаграм" : "📸 Instagram"));
         }
 
         function showScreen(n) {
@@ -222,7 +211,6 @@
                 msg.innerText = LANGS[currentLang].wishes[Math.floor(Math.random()*3)];
             }
 
-            // Лог в таблицу
             if(SCRIPT_URL.length > 10) {
                 fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ name, flower, lang: currentLang, status: data ? "VIP" : "Guest" }) });
             }
@@ -257,7 +245,6 @@
         function closeVideo() { document.getElementById('v-player').pause(); document.getElementById('overlay-video').style.display='none'; }
         function closeOverlay(id) { document.getElementById(id).style.display='none'; }
 
-        // Particles
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
         let pts = [];
