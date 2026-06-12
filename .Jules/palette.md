@@ -1,0 +1,3 @@
+## 2025-06-12 - [Semantic Buttons & Valid Link Patterns]
+**Learning:** This app used `div` elements for language and flower selection, and a nested `<button>` inside an `<a>` tag for the Instagram link. Non-semantic elements break keyboard navigation and screen reader support, and nested interactive elements are invalid HTML that can cause unpredictable behavior.
+**Action:** Always use `<button>` for actions and `<a>` for navigation. When a link should look like a button, style the `<a>` tag directly using shared button classes instead of nesting a `<button>` inside it. Use `:focus-visible` to provide clear indicators for keyboard users without affecting mouse users.

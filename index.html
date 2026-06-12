@@ -38,6 +38,7 @@
         .lang-btn { 
             padding: 10px 20px; border: 2px solid rgba(255,255,255,0.2); border-radius: 15px; 
             cursor: pointer; background: rgba(255,255,255,0.05); transition: 0.4s; font-weight: bold;
+            color: white;
         }
         .lang-btn.selected { background: var(--pink); border-color: var(--pink); box-shadow: 0 0 20px var(--pink); transform: translateY(-3px); }
 
@@ -55,11 +56,21 @@
             background: linear-gradient(45deg, var(--pink), var(--violet)); color: white;
             box-shadow: 0 5px 20px rgba(112, 0, 255, 0.4);
             margin-top: 10px;
+            box-sizing: border-box;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
         }
         .main-btn:active { transform: scale(0.95); }
         .main-btn:hover { box-shadow: 0 8px 25px rgba(255, 0, 127, 0.6); transform: translateY(-2px); }
 
-        .flower-card { font-size: 4rem; cursor: pointer; transition: 0.5s; filter: drop-shadow(0 0 10px rgba(255,255,255,0.2)); }
+        :focus-visible {
+            outline: 3px solid var(--gold);
+            outline-offset: 4px;
+        }
+
+        .flower-card { font-size: 4rem; cursor: pointer; transition: 0.5s; filter: drop-shadow(0 0 10px rgba(255,255,255,0.2)); background: none; border: none; padding: 0; }
         .flower-card:hover { transform: rotate(15deg) scale(1.2); filter: drop-shadow(0 0 20px var(--pink)); }
 
         #final-card-frame {
@@ -99,10 +110,10 @@
     <div class="container">
         <div id="screen-0" class="screen active">
             <div class="lang-picker">
-                <div class="lang-btn selected" onclick="updateLang('ru', this)">RU</div>
-                <div class="lang-btn" onclick="updateLang('kz', this)">KZ</div>
-                <div class="lang-btn" onclick="updateLang('en', this)">EN</div>
-                <div class="lang-btn" onclick="updateLang('jp', this)">JP</div>
+                <button class="lang-btn selected" onclick="updateLang('ru', this)" aria-label="Switch language to Russian">RU</button>
+                <button class="lang-btn" onclick="updateLang('kz', this)" aria-label="Switch language to Kazakh">KZ</button>
+                <button class="lang-btn" onclick="updateLang('en', this)" aria-label="Switch language to English">EN</button>
+                <button class="lang-btn" onclick="updateLang('jp', this)" aria-label="Switch language to Japanese">JP</button>
             </div>
             <h1 id="txt-welcome" style="font-size: 1.8rem; margin-bottom: 30px;">Весна начинается с тебя...</h1>
             <button class="main-btn" onclick="showScreen(1)" id="btn-start">Начать ✨</button>
@@ -111,14 +122,14 @@
         <div id="screen-1" class="screen">
             <h1 id="txt-choice" style="margin-bottom: 40px;">Выбери свой цветок 💐</h1>
             <div style="display: flex; gap: 30px;">
-                <div class="flower-card" onclick="pickFlower('🌷')">🌷</div>
-                <div class="flower-card" onclick="pickFlower('🌹')">🌹</div>
-                <div class="flower-card" onclick="pickFlower('🌸')">🌸</div>
+                <button class="flower-card" onclick="pickFlower('🌷')" aria-label="Pick Tulip">🌷</button>
+                <button class="flower-card" onclick="pickFlower('🌹')" aria-label="Pick Rose">🌹</button>
+                <button class="flower-card" onclick="pickFlower('🌸')" aria-label="Pick Cherry Blossom">🌸</button>
             </div>
         </div>
 
         <div id="screen-2" class="screen">
-            <input type="text" id="nameInput" placeholder="Твое имя...">
+            <input type="text" id="nameInput" placeholder="Твое имя..." aria-label="Enter your name">
             <button class="main-btn" onclick="runMagic()" id="btn-open">Открыть подарок</button>
         </div>
 
@@ -133,10 +144,8 @@
             <button id="btn-letter" onclick="openLetter()" style="display:none; margin-top: 20px; background: none; border: 2px solid white; color: white;" class="main-btn">✉️ Личное письмо</button>
             <button id="btn-video" onclick="openVideo()" style="background: var(--gold); color: black;" class="main-btn">🎬 Смотреть видео</button>
             
-            <a href="https://www.instagram.com/prost_aldi?igsh=cHY3ZXJrdmQ0dDky" target="_blank" style="text-decoration: none; width: 100%; display: flex; justify-content: center;">
-                <button id="btn-insta" class="main-btn" style="background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: white; border: none;">
-                    📸 Instagram
-                </button>
+            <a href="https://www.instagram.com/prost_aldi?igsh=cHY3ZXJrdmQ0dDky" target="_blank" id="btn-insta" class="main-btn" style="background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: white; border: none; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+                📸 Instagram
             </a>
         </div>
     </div>
