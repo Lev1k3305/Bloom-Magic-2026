@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Bloom Magic 2026 🌸</title>
     
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
@@ -279,13 +281,17 @@
             canvas.width = window.innerWidth; canvas.height = window.innerHeight;
             for(let i=0; i<40; i++) pts.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, r: Math.random()*2+1, s: Math.random()*0.5+0.2 });
         }
+        // ⚡ Bolt Optimization: Batch canvas draw operations into a single path call to reduce state changes and GPU draw overhead per frame.
         function animate() {
             ctx.clearRect(0,0,canvas.width,canvas.height);
             ctx.fillStyle = "rgba(255,255,255,0.3)";
+            ctx.beginPath();
             pts.forEach(p => {
-                ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill();
+                ctx.moveTo(p.x + p.r, p.y);
+                ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
                 p.y -= p.s; if(p.y < -10) p.y = canvas.height+10;
             });
+            ctx.fill();
             requestAnimationFrame(animate);
         }
         init(); animate();
